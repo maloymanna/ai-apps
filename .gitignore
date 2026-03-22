@@ -1,0 +1,38 @@
+# Node / TypeScript
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.env
+*.log
+logs/
+
+# Python / Flask
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+env/
+*.egg-info/
+
+# Pixi environment artifacts
+.pixi/
+pixi.lock
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary / swap
+*.swp
+*.tmp
+
+# Scripts
+*.bak

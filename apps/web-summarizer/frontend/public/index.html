@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Page Summarizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Web Page Summarizer</h1>
+            <p>Get clear, detailed summaries of any web page in seconds</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <label for="url-input">Enter URL to summarize:</label>
+                <div class="input-group">
+                    <input type="url" id="url-input" placeholder="https://example.com" required>
+                    <button id="submit-btn">
+                        <span>Summarize</span>
+                        <span class="spinner-container">
+                            <div id="loading-spinner"></div>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h2>Summary</h2>
+                <div id="summary-container">
+                    <p>Your summary will appear here...</p>
+                </div>
+                
+                <div id="export-section">
+                    <button class="export-btn" id="export-text">Export as Text</button>
+                    <button class="export-btn" id="export-pdf">Export as PDF</button>
+                    <button class="export-btn" id="reset-btn">Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Web Page Summarizer Tool &copy; 2026</p>
+        </div>
+    </div>
+</body>
+</html>

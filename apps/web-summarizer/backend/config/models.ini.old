@@ -1,0 +1,41 @@
+[DEFAULT]
+default_provider = openai
+
+[groq]
+api_key_env = GROQ_API_KEY
+base_url = https://api.groq.com/openai/v1
+model = mixtral-8x7b-32768
+client_type = openai
+temperature = 0.3
+max_tokens = 1000
+
+[mistral]
+api_key_env = MISTRAL_API_KEY
+base_url = https://api.mistral.ai/v1
+model = mistral-large-latest
+client_type = mistral
+temperature = 0.3
+max_tokens = 1000
+
+[gemini]
+api_key_env = GEMINI_API_KEY
+model = gemini-pro
+client_type = gemini
+temperature = 0.3
+max_tokens = 1000
+
+[openrouter]
+api_key_env = OPENROUTER_API_KEY
+base_url = https://openrouter.ai/api/v1
+model = microsoft/wizardlm-2-8x22b
+client_type = openai
+temperature = 0.3
+max_tokens = 1000
+
+[openai]
+api_key_env = OPENAI_API_KEY
+base_url = https://api.openai.com/v1
+model = gpt-3.5-turbo
+client_type = openai
+temperature = 0.3
+max_tokens = 1000
