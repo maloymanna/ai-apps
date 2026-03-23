@@ -5,60 +5,58 @@ class WebSummarizerApp {
   private submitButton: HTMLButtonElement;
   private summaryContainer: HTMLElement;
   private loadingSpinner: HTMLElement;
-  private exportButtons: NodeListOf<HTMLElement>;
-  private resetButton: HTMLElement;
+  // Declare the new properties here
+  private exportSection: HTMLElement;
+  private exportTextBtn: HTMLButtonElement;
+  private exportPdfBtn: HTMLButtonElement;
+  private resetButton: HTMLButtonElement;
 
   constructor() {
     this.urlInput = document.getElementById('url-input') as HTMLInputElement;
     this.submitButton = document.getElementById('submit-btn') as HTMLButtonElement;
     this.summaryContainer = document.getElementById('summary-container')!;
     this.loadingSpinner = document.getElementById('loading-spinner')!;
-    this.exportButtons = document.querySelectorAll('.export-btn');
-    this.resetButton = document.getElementById('reset-btn')!;
+    
+    // Initialize the new properties in the constructor
+    this.exportSection = document.getElementById('export-section')!;
+    this.exportTextBtn = document.getElementById('export-text') as HTMLButtonElement;
+    this.exportPdfBtn = document.getElementById('export-pdf') as HTMLButtonElement;
+    this.resetButton = document.getElementById('reset-btn') as HTMLButtonElement;
 
     this.initializeEventListeners();
-    console.log("WebSummarizerApp initialized"); // Debug log
+    
+    // Set the initial state when the app is constructed
+    this.setStateInitial();
   }
 
   private initializeEventListeners(): void {
     this.submitButton.addEventListener('click', () => this.handleSummarize());
     this.resetButton.addEventListener('click', () => this.handleReset());
 
-    // Add export event listeners
-    document.getElementById('export-text')?.addEventListener('click', () => 
-      this.handleExport('text')
-    );
-    document.getElementById('export-pdf')?.addEventListener('click', () => 
-      this.handleExport('pdf')
-    );
-  }
-
-  private handleReset(): void {
-    // Clear the summary area and URL input
-    this.urlInput.value = '';
-    this.summaryContainer.innerHTML = '<p>Your summary will appear here...</p>';
-    
-    // Hide export buttons
-    const exportSection = document.getElementById('export-section');
-    if (exportSection) {
-      exportSection.style.display = 'none';
-    }
+    // Add export event listeners using the stored references
+    this.exportTextBtn.addEventListener('click', () => this.handleExport('text'));
+    this.exportPdfBtn.addEventListener('click', () => this.handleExport('pdf'));
   }
 
   private async handleSummarize(): Promise<void> {
     console.log("Summarize button clicked"); // Debug log
-    
+
     const url = this.urlInput.value.trim();
-    
+
     if (!this.isValidUrl(url)) {
       console.error("Invalid URL:", url); // Debug log
       this.showError('Please enter a valid URL');
+      // Still call setStateFailure or a variant to show the reset button on error
+      // Or maybe just ensure the section is visible with disabled buttons handled elsewhere
+      // For now, let's ensure the section is visible on error by calling setStateFailure from here
+      // But actually, showError should lead to setStateFailure being called explicitly afterwards
+      this.setStateFailure(); 
       return;
     }
 
     console.log("Valid URL:", url); // Debug log
     this.setLoadingState(true);
-    this.hideError();
+    this.hideError(); // Clear any previous error display
 
     try {
       console.log("Sending request to backend..."); // Debug log
@@ -73,22 +71,44 @@ class WebSummarizerApp {
       console.log("Response received:", response.status); // Debug log
 
       const data = await response.json();
-      console.log("Response data:", data); // Debug log
+      console.log("Response ", data); // Debug log
 
       if (data.success) {
         console.log("Summary received successfully"); // Debug log
         this.displaySummary(data.summary);
-        this.showExportButtons();
+        this.setStateSuccess(); // Set state to success
       } else {
         console.error("API error:", data.error); // Debug log
         this.showError(data.error || 'Failed to summarize page');
+        this.setStateFailure(); // Set state to failure
       }
     } catch (error) {
       console.error('Network error:', error); // Debug log
       this.showError('Network error: Could not reach the server. Please check if the backend is running.');
+      this.setStateFailure(); // Treat network errors as failures
     } finally {
       this.setLoadingState(false);
     }
+  }
+
+  private setStateSuccess(): void {
+    this.exportSection.style.display = 'flex'; // Show export section
+    this.exportTextBtn.disabled = false; // Enable export buttons
+    this.exportPdfBtn.disabled = false; // Enable export buttons
+  }
+
+  private setStateFailure(): void {
+    this.exportSection.style.display = 'flex'; // Show export section (includes reset)
+    this.exportTextBtn.disabled = true; // Disable export buttons
+    this.exportPdfBtn.disabled = true; // Disable export buttons
+  }
+
+  private setStateInitial(): void {
+    this.exportSection.style.display = 'none'; // Hide export section
+  }
+
+  private setStateReset(): void {
+    this.exportSection.style.display = 'none'; // Hide export section
   }
 
   private isValidUrl(url: string): boolean {
@@ -111,54 +131,44 @@ class WebSummarizerApp {
         ${summary.split('\n\n').map(paragraph => `<p>${paragraph}</p>`).join('')}
       </div>
     `;
+    // State will be set to success by handleSummarize -> setStateSuccess
   }
 
   private showError(message: string): void {
     this.summaryContainer.innerHTML = `<div class="error-message">${message}</div>`;
-    // Show the export section but disable export buttons
-    this.showExportSectionWithDisabledExports();
-  }
-
-  private showExportSectionWithDisabledExports(): void {
-    const exportSection = document.getElementById('export-section');
-    if (exportSection) {
-      exportSection.style.display = 'flex';
-      // Disable export buttons but keep reset active
-      const exportTextBtn = document.getElementById('export-text') as HTMLButtonElement;
-      const exportPdfBtn = document.getElementById('export-pdf') as HTMLButtonElement;
-      if (exportTextBtn) exportTextBtn.disabled = true;
-      if (exportPdfBtn) exportPdfBtn.disabled = true;
-    }
+    // State will be set to failure by handleSummarize -> setStateFailure
+    // Do NOT call setStateFailure here as handleSummarize already manages it
   }
 
   private hideError(): void {
     const errorEl = this.summaryContainer.querySelector('.error-message');
     if (errorEl) {
       errorEl.remove();
-      // Re-enable export buttons if they were disabled due to error
-      const exportTextBtn = document.getElementById('export-text') as HTMLButtonElement;
-      const exportPdfBtn = document.getElementById('export-pdf') as HTMLButtonElement;
-      if (exportTextBtn) exportTextBtn.disabled = false;
-      if (exportPdfBtn) exportPdfBtn.disabled = false;
     }
+    // Potentially re-enable buttons if summary becomes empty after error removal
+    // For now, leave state management to the primary actions
   }
 
-  private showExportButtons(): void {
-    const exportSection = document.getElementById('export-section');
-    if (exportSection) {
-      exportSection.style.display = 'flex';
-      // Re-enable export buttons if they were disabled due to error
-      const exportTextBtn = document.getElementById('export-text') as HTMLButtonElement;
-      const exportPdfBtn = document.getElementById('export-pdf') as HTMLButtonElement;
-      if (exportTextBtn) exportTextBtn.disabled = false;
-      if (exportPdfBtn) exportPdfBtn.disabled = false;
-    }
+  private handleReset(): void {
+    // Clear the summary area
+    this.summaryContainer.innerHTML = '<p>Your summary will appear here...</p>';
+    // Clear the URL input
+    this.urlInput.value = '';
+    // Set state to initial/reset state
+    this.setStateReset();
   }
 
   private handleExport(format: 'text' | 'pdf'): void {
+    // Check if export buttons are disabled before proceeding
+    if ((format === 'text' && this.exportTextBtn.disabled) ||
+        (format === 'pdf' && this.exportPdfBtn.disabled)) {
+      console.warn(`Cannot export as ${format}, button is disabled.`);
+      return;
+    }
+
     const summaryText = this.summaryContainer.textContent || '';
     const url = this.urlInput.value.trim();
-    
+
     if (!summaryText) {
       alert('No summary available to export');
       return;
@@ -185,34 +195,44 @@ class WebSummarizerApp {
 
   private async exportAsPdf(content: string, url: string): Promise<void> {
     try {
-      // Dynamically import jsPDF only when needed
-      //const jsPDF = await import('jspdf').then(module => module.jsPDF);
-      const { jsPDF } = await import(/* webpackChunkName: "jspdf" */ 'jspdf');
+      const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
-      
-      // Add title
+
+      // Add title with smaller font
       doc.setFontSize(12);
       // Split long URL into multiple lines
       const wrappedUrl = doc.splitTextToSize(`URL: ${url}`, 180);
       doc.text(wrappedUrl, 10, 10);
-      
+
       // Add content with automatic line breaks
-      doc.setFontSize(10);
+      doc.setFontSize(10); // Smaller font for content
       const splitText = doc.splitTextToSize(content, 180);
+      // Add vertical spacing after URL
       doc.text(splitText, 10, 30);
-      
+
       doc.save(`summary-${new Date().toISOString().slice(0, 10)}.pdf`);
     } catch (error) {
       console.error('PDF export failed:', error);
-      // Fallback to text export
       console.warn('PDF export failed, falling back to text export');
       this.exportAsText(content, url);
     }
   }
 }
 
-// Initialize app when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM loaded, initializing app"); // Debug log
+// Initialize app when DOM is loaded - Remove the separate handler
+// document.addEventListener('DOMContentLoaded', () => {
+//   console.log("DOM loaded, initializing app"); // Debug log
+//   const app = new WebSummarizerApp();
+//   // Set initial state on load - Now done in constructor
+//   // app.setStateInitial(); 
+// });
+
+// Instead, initialize the app when the script runs, ensuring DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    new WebSummarizerApp();
+  });
+} else {
+  // DOM is already ready
   new WebSummarizerApp();
-});
+}

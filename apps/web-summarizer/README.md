@@ -54,6 +54,16 @@ npm run build
 2. Start the backend server `python app.py`
 3. Go to the application at http://localhost:5000 
 
+**API key security, .env & Groq**
+
+- To avoid risk of API keys being exposed, use them as environment variables.
+- Export the API keys in `.env` file e.g. `export MISTRAL_API_KEY=api_key`
+- Ensure your `.gitignore` file is setup to never upload the `.env` file
+- For enhanced safety, you can use `.envrc` file with the API keys stored in secret tool like `pass`, e.g. export MISTRAL_API_KEY=$(pass api/mistral)
+- Note that while the above step works for Mistral and OpenRouter, it doesn't for Groq (will throw 401 Invalid API Key error).
+- It appears that Groq's Python SDK is unable to do command substitution and requires the actual API key string.
+- A workaround to this for Groq is to fetch the API key at runtime in Python using `pass`, even though it makes a special treatment. At least, you won't need to write your API key in plaintext in `.env`.
+
 ## Optional improvements
 
 - Deploy to an inference endpoint (ensure API keys are not exposed)

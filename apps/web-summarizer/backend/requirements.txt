@@ -7,3 +7,4 @@ mistralai==0.0.11
 google-generativeai==0.4.1
 reportlab==4.0.4
 python-dotenv==1.0.1
+groq==1.1.1

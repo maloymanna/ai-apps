@@ -156,6 +156,22 @@ body {
   background-color: #45a049;
 }
 
+/* More specific selector for disabled export buttons */
+#export-section .export-btn:disabled {
+  background-color: #cccccc; /* Gray background */
+  color: #666666;            /* Gray text */
+  border: 1px solid #aaaaaa; /* Gray border */
+  cursor: not-allowed;       /* Change cursor to indicate disabled state */
+  opacity: 0.6;             /* Optional: Add slight transparency */
+}
+
+/* Ensure reset button maintains its original color when enabled */
+#reset-btn:not(:disabled) {
+  background-color: #f44336; /* Red background (or your preferred reset color) */
+  color: white;              /* White text */
+  border: none;              /* Or your preferred border */
+}
+
 .footer {
   text-align: center;
   padding: 20px;

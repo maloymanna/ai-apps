@@ -14,6 +14,7 @@ import configparser
 import importlib
 from dotenv import load_dotenv
 import re
+from groq import Groq
 
 # Load environment variables from .env file
 load_dotenv()
@@ -56,6 +57,7 @@ def create_llm_client(provider):
     print(f"Provider: {provider}")  # Debug
     print(f"API Key env var: {api_key_env}")  # Debug
     print(f"API Key value: {api_key[:5] if api_key else None}")  # Debug (show only first 5 chars)
+    # print(os.getenv("GROQ_API_KEY")) # Debug
 
     if not api_key:
         raise Exception(f"No API key found for {provider}")
@@ -187,6 +189,9 @@ def extract_text_from_url(url):
         chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
         text = ' '.join(chunk for chunk in chunks if chunk)
         
+        tlen = len(text)
+        print(f"Text : {tlen} characters")  # Debug log
+
         return text
     except Exception as e:
         raise Exception(f"Error extracting content from URL: {str(e)}")
