@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Enhanced Read Aloud",
+  "name": "Read Aloud",
   "version": "1.0",
-  "description": "Read selected text or full page aloud with controls and voice selection.",
+  "description": "Read selected text or full page with Text to Speech",
   "permissions": ["scripting", "activeTab", "tabs"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+      "default_icon": {
+      "16": "icons/readaloud16.png",
+      "48": "icons/readaloud48.png",
+      "128": "icons/readaloud128.png"
+    }
   }
 }
