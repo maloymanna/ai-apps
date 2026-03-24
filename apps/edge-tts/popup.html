@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      width: 100px;          /* smaller width */
+      padding: 1px;
+      text-align: center;
+    }
+
+    button {
+      width: 40px;           /* smaller button */
+      height: 20px;
+      margin: 1px;
+      padding: 1px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    #stopBtn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    svg {
+      width: 12px;           /* smaller SVG */
+      height: 12px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <button id="toggleBtn"></button>
+    <button id="stopBtn" disabled></button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

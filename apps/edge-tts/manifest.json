@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Enhanced Read Aloud",
+  "version": "1.0",
+  "description": "Read selected text or full page aloud with controls and voice selection.",
+  "permissions": ["scripting", "activeTab", "tabs"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

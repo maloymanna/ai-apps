@@ -1,0 +1,14 @@
+body {
+  font-family: Arial, sans-serif;
+  width: 300px;
+  padding: 10px;
+}
+
+button {
+  margin: 5px;
+}
+
+label {
+  font-size: 14px;
+  margin: 5px 0;
+}

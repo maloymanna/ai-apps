@@ -1,0 +1,35 @@
+# edge-tts
+
+*An extension to add readaloud capability to Microsoft Edge browser on Linux Ubuntu*
+
+- Simple UI with play/pause toggle and stop icons.
+- Support for 3 languages: English, French, Spanish
+- Uses installed Microsoft voices: Jenny/Aria(en),Hortense/Elsa(fr),Pablo/Raul(es)
+
+## Setup
+
+**Folder structure**
+```text
+edge-tts/
+	├── background.js
+	├── content.js
+	├── icons/
+	│  ├── readaloud128.png
+	│  ├── readaloud16.png
+	│  └── readaloud48.png
+	├── manifest.json
+	├── popup.html
+	├── popup.js
+	└── styles.css
+```
+1. Type `edge://extensions/` in Edge address bar to open the Extensions settings
+2. Enable `Developer mode`
+3. Click `Load unpacked` and select the edge-tts folder. Enable the extension.
+4. Preferably pin the extension for easy access (Settings > Manage Extensions > Pin to toolbar) 
+5. Click on Extension icon in the toolbar, and hit Play icon
+
+## Optional improvements
+
+- Add text parsing to skip navigation elements and only read the main content
+- Add voice and language selectors, speech and pitch controls with a UI settings option
+
