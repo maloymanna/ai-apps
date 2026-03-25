@@ -1,10 +1,10 @@
 # edge-tts
 
-*An extension to add readaloud capability to Microsoft Edge browser on Linux Ubuntu*
+*An extension to read aloud webpages using Text-to-Speech for Microsoft Edge browser on Linux Ubuntu*
 
-- Simple UI with play/pause toggle and stop icons.
-- Support for 3 languages: English, French, Spanish
-- Uses installed Microsoft voices: Jenny/Aria(en),Hortense/Elsa(fr),Pablo/Raul(es)
+- Simple UI with play/pause toggle and stop controls.
+- Support for 3 languages: English, French, Spanish.
+- Uses installed Microsoft voices: Jenny/Aria(en),Vivienne/Henri(fr),Pablo/Raul(es). No AI models/LLM used.
 
 ## Setup
 
@@ -30,6 +30,6 @@ edge-tts/
 
 ## Optional improvements
 
-- Add text parsing to skip navigation elements and only read the main content
-- Add voice and language selectors, speech and pitch controls with a UI settings option
+- Improve text parsing with chunking or with Mozilla readability library
+- Add voice and language selectors, speech and pitch controls with a settings option in the UI
 
