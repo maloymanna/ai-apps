@@ -153,27 +153,45 @@ if (!window.__edge_tts_injected__) {
   }
 
   function pickBestVoice(voices, pageLang) {
-    // Define preferred voices for each supported language
+
+    // --- Specific logic for French as auto-selection provides an incorrect accent ---
+    if (pageLang === 'fr') {
+      // 1. Prioritise French-France locale voice, with the standard voices
+      const priorityNeuralNames = [
+        "fr-FR-VivienneNeural",
+        "fr-FR-HenriNeural",
+        "Microsoft Vivienne",
+        "Microsoft Henri" 
+      ];
+
+      for (const name of priorityNeuralNames) {
+        const match = voices.find(v => v.name.includes(name));
+        if (match) return match;
+      }
+
+      // 2. Strict Locale Check: Look for fr-FR (Exclude CA, CH, BE)
+      // We check if lang is exactly "fr-FR" or starts with "fr-FR-"
+      const strictFR = voices.find(v => v.lang === "fr-FR" || v.lang.startsWith("fr-FR-"));
+      if (strictFR) return strictFR;
+
+      // 3. Fallback: If no fr-FR found at all, use any 'fr' voice available
+      const anyFrench = voices.find(v => v.lang.startsWith("fr"));
+      if (anyFrench) return anyFrench;
+    }      
+
+    // --- Logic for English and Spanish ---
     const voicePreferences = {
       'en': ["Microsoft Jenny", "Microsoft Aria", "Google US English", "en-US"],
-      'fr': ["Microsoft Hortense", "Microsoft Elsa", "Google français", "fr-FR"],
       'es': ["Microsoft Pablo", "Microsoft Raul", "Google español", "es-ES"]
     };
 
-    // Get the list of preferred names for the current language. Default to English.
-    const preferredNames = voicePreferences[pageLang] || voicePreferences['en'];
-
-    // Try to find a match from the preferred list
-    for (const name of preferredNames) {
-      const match = voices.find(v =>
-        v.name.includes(name) || v.lang.includes(name)
-      );
-      if (match) return match;
+    const preferredNames = voicePreferences[pageLang];
+    if (preferredNames) {
+      for (const name of preferredNames) {
+        const match = voices.find(v => v.name.includes(name) || v.lang.includes(name));
+        if (match) return match;
+      }
     }
-
-    // Fallback: try to find ANY voice matching the language code (e.g. starts with 'fr')
-    const genericMatch = voices.find(v => v.lang.startsWith(pageLang));
-    if (genericMatch) return genericMatch;
 
     // Ultimate fallback: first available voice
     return voices[0];
@@ -194,6 +212,7 @@ if (!window.__edge_tts_injected__) {
 
     // Pass 'lang' here
     const voice = pickBestVoice(state.voices, lang);
+    alert("voice is: " + voice.name)
 
     if (voice) {
       utterance.voice = voice;
