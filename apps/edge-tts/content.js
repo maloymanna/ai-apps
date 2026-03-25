@@ -160,6 +160,12 @@ if (!window.__edge_tts_injected__) {
 
     const utterance = new SpeechSynthesisUtterance(text);
 
+    // Handle reading finishing naturally
+    utterance.onend = () => {
+      // Send a message back to the extension when reading finishes naturally
+      chrome.runtime.sendMessage({ command: "finished" });
+    };
+
     const voice = pickBestVoice(state.voices);
     if (voice) {
       utterance.voice = voice;

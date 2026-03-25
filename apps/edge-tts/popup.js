@@ -80,6 +80,16 @@ async function handleStop() {
   updateUI();
 }
 
+// Listen for messages from content script
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.command === "finished") {
+    // Reading finished naturally
+    isPlaying = false;
+    isPaused = false;
+    updateUI();
+  }
+});
+
 // Init
 document.getElementById("toggleBtn").addEventListener("click", handleToggle);
 document.getElementById("stopBtn").addEventListener("click", handleStop);
