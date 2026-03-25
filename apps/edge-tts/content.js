@@ -6,6 +6,24 @@ if (!window.__edge_tts_injected__) {
     voices: []
   };
 
+  function getPageLanguage() {
+    // 1. Try to get language from the HTML tag (e.g., <html lang="fr">)
+    const htmlLang = document.documentElement.lang || "";
+    
+    // 2. Fallback to browser language if not found
+    const navLang = navigator.language || "";
+
+    const lang = (htmlLang || navLang).toLowerCase();
+    
+    // Extract the primary code (e.g., "fr" from "fr-CA")
+    const primaryLang = lang.split('-')[0];
+
+    // Limit to our supported languages, default to English otherwise
+    if (primaryLang === 'fr') return 'fr';
+    if (primaryLang === 'es') return 'es';
+    return 'en';
+  }
+
   function cleanText(root) {
     const clone = root.cloneNode(true);
     
@@ -134,26 +152,34 @@ if (!window.__edge_tts_injected__) {
     });
   }
 
-  function pickBestVoice(voices) {
-    const tiers = [
-      ["Microsoft Jenny", "Microsoft Aria"],        // English
-      ["Microsoft Hortense", "Microsoft Elsa"],    // French
-      ["Microsoft Pablo", "Microsoft Raul"],       // Spanish
-      ["Google UK English", "Google US English"],  // fallback
-      ["en-US", "en-GB"]                           // fallback
-    ];
-    for (const tier of tiers) {
-      for (const name of tier) {
-        const match = voices.find(v =>
-          v.name.includes(name) || v.lang.includes(name)
-        );
-        if (match) return match;
-      }
+  function pickBestVoice(voices, pageLang) {
+    // Define preferred voices for each supported language
+    const voicePreferences = {
+      'en': ["Microsoft Jenny", "Microsoft Aria", "Google US English", "en-US"],
+      'fr': ["Microsoft Hortense", "Microsoft Elsa", "Google français", "fr-FR"],
+      'es': ["Microsoft Pablo", "Microsoft Raul", "Google español", "es-ES"]
+    };
+
+    // Get the list of preferred names for the current language. Default to English.
+    const preferredNames = voicePreferences[pageLang] || voicePreferences['en'];
+
+    // Try to find a match from the preferred list
+    for (const name of preferredNames) {
+      const match = voices.find(v =>
+        v.name.includes(name) || v.lang.includes(name)
+      );
+      if (match) return match;
     }
+
+    // Fallback: try to find ANY voice matching the language code (e.g. starts with 'fr')
+    const genericMatch = voices.find(v => v.lang.startsWith(pageLang));
+    if (genericMatch) return genericMatch;
+
+    // Ultimate fallback: first available voice
     return voices[0];
   }
 
-  function speak(text) {
+  function speak(text, lang = 'en') { // Added lang parameter
     const synth = window.speechSynthesis;
 
     synth.cancel(); // stop previous
@@ -166,7 +192,9 @@ if (!window.__edge_tts_injected__) {
       chrome.runtime.sendMessage({ command: "finished" });
     };
 
-    const voice = pickBestVoice(state.voices);
+    // Pass 'lang' here
+    const voice = pickBestVoice(state.voices, lang);
+
     if (voice) {
       utterance.voice = voice;
       utterance.lang = voice.lang;
@@ -187,12 +215,16 @@ if (!window.__edge_tts_injected__) {
     window.speechSynthesis.cancel();
   }
 
-  async function start({ voiceName}) {
+  async function start() {
     const text = getText();
     if (!text) return;
 
     await loadVoices();
-    speak(text);
+    // 1. Detect language
+    const lang = getPageLanguage();
+    
+    // 2. Pass language to speak
+    speak(text, lang);
   }
 
   chrome.runtime.onMessage.addListener((msg) => {
