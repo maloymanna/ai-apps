@@ -39,5 +39,5 @@ edge-tts/
 - Improve text parsing with chunking or with Mozilla readability library
 - Add voice and language selectors, speech and pitch controls with a settings option in the UI
   
-*Note<sup>*</sup>: Edge-TTS has multiple languages, but I could test only those that I speak personally.*
+<sup>*</sup>*Note: Edge-TTS has multiple languages, but I could test only those that I speak personally.*
 
