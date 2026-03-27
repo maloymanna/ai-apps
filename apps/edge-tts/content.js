@@ -18,10 +18,12 @@ if (!window.__edge_tts_injected__) {
     // Extract the primary code (e.g., "fr" from "fr-CA")
     const primaryLang = lang.split('-')[0];
 
-    // Limit to our supported languages, default to English otherwise
-    if (primaryLang === 'fr') return 'fr';
-    if (primaryLang === 'es') return 'es';
-    return 'en';
+    // Check for our supported languages, default to English otherwise
+    if (primaryLang === 'bn') return 'bn'; // Bengali support
+    if (primaryLang === 'hi') return 'hi'; // Hindi support    
+    if (primaryLang === 'fr') return 'fr'; // French support
+    if (primaryLang === 'es') return 'es'; // Spanish support
+    return 'en'; // Default to English
   }
 
   function cleanText(root) {
@@ -153,7 +155,6 @@ if (!window.__edge_tts_injected__) {
   }
 
   function pickBestVoice(voices, pageLang) {
-
     // --- Specific logic for French as auto-selection provides an incorrect accent ---
     if (pageLang === 'fr') {
       // 1. Prioritise French-France locale voice, with the standard voices
@@ -179,10 +180,12 @@ if (!window.__edge_tts_injected__) {
       if (anyFrench) return anyFrench;
     }      
 
-    // --- Logic for English and Spanish ---
+    // --- Logic for other languages BN, HI, ES, EN ---
     const voicePreferences = {
       'en': ["Microsoft Jenny", "Microsoft Aria", "Google US English", "en-US"],
-      'es': ["Microsoft Pablo", "Microsoft Raul", "Google español", "es-ES"]
+      'bn': ["Microsoft Bashkar", "Microsoft Nabanita", "bn-IN", "bn-BD"],
+      'es': ["Microsoft Pablo", "Microsoft Raul", "Google español", "es-ES"],
+      'hi': ["Microsoft Swara", "Microsoft Madhur", "hi-IN"]
     };
 
     const preferredNames = voicePreferences[pageLang];
@@ -212,7 +215,7 @@ if (!window.__edge_tts_injected__) {
 
     // Pass 'lang' here
     const voice = pickBestVoice(state.voices, lang);
-    alert("voice is: " + voice.name)
+    // alert("voice is: " + voice.name)
 
     if (voice) {
       utterance.voice = voice;
