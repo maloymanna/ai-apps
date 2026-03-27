@@ -3,7 +3,7 @@
 *An extension to read aloud webpages using Text-to-Speech for Microsoft Edge browser on Linux Ubuntu*
 
 - Simple UI with play/pause toggle and stop controls.
-- Support for 5 languages*: English, French, Spanish, Bengali, Hindi. 
+- Support for 5 languages<sup>*</sup>: English, French, Spanish, Bengali, Hindi. 
 - Uses installed Microsoft voices: Jenny/Aria(en),Vivienne/Henri(fr),Pablo/Raul(es), Bashkar/Nabanita(bn), Swara/Madhur(hi).  
 - No AI models/LLM used.
 
@@ -39,5 +39,5 @@ edge-tts/
 - Improve text parsing with chunking or with Mozilla readability library
 - Add voice and language selectors, speech and pitch controls with a settings option in the UI
   
-*Note*: Edge-TTS has multiple languages, but I could test only those that I speak personally.*
+*Note<sup>*</sup>: Edge-TTS has multiple languages, but I could test only those that I speak personally.*
 
