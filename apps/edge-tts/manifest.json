@@ -7,9 +7,9 @@
   "action": {
     "default_popup": "popup.html",
       "default_icon": {
-      "16": "icons/readaloud16.png",
-      "48": "icons/readaloud48.png",
-      "128": "icons/readaloud128.png"
+      "16": "icons/edge-tts16.png",
+      "48": "icons/edge-tts48.png",
+      "128": "icons/edge-tts128.png"
     }
   }
 }
