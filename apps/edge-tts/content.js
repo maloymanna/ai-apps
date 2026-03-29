@@ -120,6 +120,7 @@ if (!window.__edge_tts_injected__) {
 
     // Recursive function to walk the DOM
     function processNode(node) {
+    
       // 1. If it's an Element, check if it's junk
       if (node.nodeType === Node.ELEMENT_NODE) {
         // If element matches junk selector, stop processing this branch
@@ -131,7 +132,7 @@ if (!window.__edge_tts_injected__) {
         return;
       }
 
-      // 2. If it's a Text Node, split into words
+      // 2. If it's a Text Node, split into words    
       if (node.nodeType === Node.TEXT_NODE) {
         const text = node.nodeValue;
         // Skip empty or whitespace-only nodes
@@ -253,7 +254,16 @@ if (!window.__edge_tts_injected__) {
 // Word highlighting mods --->
     // Safety check: Ensure we have spans to read
     if (state.highlightedSpans.length === 0) {
-      console.warn("Edge TTS: No words found to speak.");
+      console.log("Edge TTS: Error - No words found to speak.");
+
+      // Send the error message to the Popup here!
+      chrome.runtime.sendMessage({ 
+        command: "showError", 
+        message: "ⓘ Page is non-standard:\n \
+Navigation elements mixed with main content.\n\n \
+👉 Try selecting the specific text you want to read with your mouse, then click Play." 
+      });
+
       return;
     }
 

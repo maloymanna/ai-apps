@@ -83,10 +83,19 @@ async function handleStop() {
 // Listen for messages from content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.command === "finished") {
-    // Reading finished naturally
+    // Reset UI when reading finishes
     isPlaying = false;
     isPaused = false;
     updateUI();
+  } 
+  else if (request.command === "showError") {
+    // Reset UI and show alert on error
+    isPlaying = false;
+    isPaused = false;
+    updateUI();
+    
+    // Alert the user
+    alert(request.message);
   }
 });
 
