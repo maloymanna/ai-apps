@@ -38,5 +38,5 @@ ytsum/
 
 ## Optional improvements
 
-- [] Use a local LLM to improve performance
-- [] Allow option to use a cloud LLM with API key
+- [ ] Use a local LLM to improve performance
+- [ ] Allow option to use a cloud LLM with API key
