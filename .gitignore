@@ -13,6 +13,7 @@ __pycache__/
 *.pyo
 *.pyd
 venv/
+.venv/
 env/
 *.egg-info/
 
@@ -39,3 +40,10 @@ Thumbs.db
 
 # Debug
 *.txt
+
+# Local drafts
+aiautomate/
+gpautomate/
+localauto/
+ytsumai/
+ytsum/yt_summaries/
